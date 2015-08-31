@@ -1,0 +1,17 @@
+
+# create a manual connection
+
+start a shell on the container 
+
+	bash -x start-kafka-shell.sh 192.168.0.15:9092 172.17.0.34:2181
+
+
+go to kafka dir
+
+	cd /opt/kafka*
+
+run the manual console
+
+	bin/kafka-topics.sh --create --topic my-topic --partitions 1 --zookeeper 172.17.0.34:2181 --replication-factor 1
+	bin/kafka-topics.sh --create --topic my-topic --partitions 1 --zookeeper 172.17.42.1:2181 --replication-factor 1
+
