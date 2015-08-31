@@ -9,6 +9,8 @@ kafka:
   links:
     - zookeeper:zk
   environment:
-    KAFKA_ADVERTISED_HOST_NAME: 192.168.59.103
+    KAFKA_ADVERTISED_HOST_NAME: 192.168.0.15
+    KAFKA_CREATE_TOPICS: "my-topic:1:1,Topic2:1:1"
+    KAFKA_MESSAGE_MAX_BYTES: 10000000
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
