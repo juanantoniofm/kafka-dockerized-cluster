@@ -3,6 +3,8 @@ kafka-docker
 
 Dockerfile for [Apache Kafka](http://kafka.apache.org/)
 
+Based on http://wurstmeister.github.io/kafka-docker/ to be used in a hack day. I just added the UI to the containers and increased the message size to support big big messages (10-30MB).
+
 The image is available directly from https://registry.hub.docker.com/
 
 ##Pre-Requisites

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 if [[ -z "$KAFKA_ADVERTISED_PORT" ]]; then
     export KAFKA_ADVERTISED_PORT=$(docker port `hostname` 9092 | sed -r "s/.*:(.*)/\1/g")
@@ -20,6 +21,17 @@ fi
 
 for VAR in `env`
 do
+  if [[ $VAR =~ ^CONSUMER_ && ! $VAR =~ ^KAFKA_HOME ]]; then
+	  kafka_name=`echo "$VAR" | sed -r "s/CONSUMER_(.*)=.*/\1/g" | tr '[:upper:]' '[:lower:]' | tr _ .`
+	  env_var=`echo "$VAR" | sed -r "s/(.*)=.*/\1/g"`
+	  if egrep -q "(^|^#)$kafka_name=" $KAFKA_HOME/config/consumer.properties; then
+		  sed -r -i "s@(^|^#)($kafka_name)=(.*)@\2=${!env_var}@g" $KAFKA_HOME/config/consumer.properties
+		  echo "Configured Consumer option"
+	  else
+		  echo "$kafka_name=${!env_var}" >> $KAFKA_HOME/config/consumer.properties
+		  echo "added Consumer option"
+	  fi
+  fi
   if [[ $VAR =~ ^KAFKA_ && ! $VAR =~ ^KAFKA_HOME ]]; then
     kafka_name=`echo "$VAR" | sed -r "s/KAFKA_(.*)=.*/\1/g" | tr '[:upper:]' '[:lower:]' | tr _ .`
     env_var=`echo "$VAR" | sed -r "s/(.*)=.*/\1/g"`
@@ -40,6 +52,7 @@ while netstat -lnt | awk '$4 ~ /:9092$/ {exit 1}'; do sleep 1; done
 if [[ -n $KAFKA_CREATE_TOPICS ]]; then
     IFS=','; for topicToCreate in $KAFKA_CREATE_TOPICS; do
         IFS=':' read -a topicConfig <<< "$topicToCreate"
+	echo "CRRRRRREATING TOPIC ${topicConfig[0]}"
         $KAFKA_HOME/bin/kafka-topics.sh --create --zookeeper $KAFKA_ZOOKEEPER_CONNECT --replication-factor ${topicConfig[2]} --partition ${topicConfig[1]} --topic "${topicConfig[0]}"
     done
 fi

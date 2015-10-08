@@ -1,7 +1,7 @@
 
 # create a manual connection
 
-start a shell on the container 
+start a kafka shell on the container 
 
 	bash -x start-kafka-shell.sh 192.168.0.15:9092 172.17.0.34:2181
 
@@ -15,3 +15,22 @@ run the manual console
 	bin/kafka-topics.sh --create --topic my-topic --partitions 1 --zookeeper 172.17.0.34:2181 --replication-factor 1
 	bin/kafka-topics.sh --create --topic my-topic --partitions 1 --zookeeper 172.17.42.1:2181 --replication-factor 1
 
+
+
+## accessing the gui
+
+I have enabled a ui as well. After starting with `-f docker-compose-with-ui.yml`, you will be able to access the ui at
+
+	http://localhost:9000/#/topics
+
+and use the web console
+
+
+## Using the UI standalone
+
+While in the root of this repo
+
+    cd ui
+    docker run -d -p 9000:9000 -v /opt/kafka/kafka-ui/data:/data hwestphal/kafka-web-console
+
+and access http://localhost:9000
