@@ -10,7 +10,7 @@ kafka:
     - zookeeper:zk
   environment:
     CONSUMER_FETCH_MESSAGE_MAX_BYTES: "300000000"
-    KAFKA_ADVERTISED_HOST_NAME: 192.168.7.248
+    KAFKA_ADVERTISED_HOST_NAME: "127.0.0.1"
     KAFKA_CREATE_TOPICS: "pictures:1:1,comppictures:1:1,sales:1:1,heartbeat:1:1"
     KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
     KAFKA_MESSAGE_MAX_BYTES: "300000000"
